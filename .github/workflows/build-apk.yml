@@ -21,11 +21,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install flet==1.0.1
 
+      - name: Check environment
+        run: |
+          python --version
+          flet --version
+          java -version
+          echo "PATH=$PATH"
+
       - name: Build APK
         run: |
+          set -x
           flet build apk
 
+      - name: Find APK
+        if: always()
+        run: |
+          find . -name "*.apk" -type f -print
+
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: HomeInventory-APK
